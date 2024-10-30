@@ -50,7 +50,16 @@ dat_with_dummies <- dummy_cols(dat, dummy_cols, remove_first_dummy = TRUE, remov
 
 # baseline covariates
 W <- c(# W1
-  "year"
+  "year",
+  # W2
+  # education dummy variables
+  "education_factor_high_school_graduate",
+  "education_factor_college_graduate",
+  "baseage",
+  "sex",
+  # ethnicity dummy variables
+  "ethnic2_hispanic",
+  "ethnic2_white"
 )
 
 # post-exposure confounders (include W2 here)
@@ -62,16 +71,7 @@ Z <- c(# income dummy variables
   "tottrain_2",
   "tottrain_3",
   "packyrs",
-  "bmi",
-  # W2
-  # education dummy variables
-  "education_factor_high_school_graduate",
-  "education_factor_college_graduate",
-  "baseage",
-  "sex",
-  # ethnicity dummy variables
-  "ethnic2_hispanic",
-  "ethnic2_white"
+  "bmi"
 )
 
 # exposure
@@ -106,9 +106,9 @@ run_crumble <- function(data,
     control = crumble_control(crossfit_folds = 2L, # may want to increase
                               epochs = 500L, # start at 500L, can decrease if data is large
                               mlr3superlearner_folds = 5L, # can adjust depending on sample size
-                              zprime_folds = 1L, # keeping at default, can adjust
+                              zprime_folds = 1L, # keeping at default, can adjust (increase may speed up run)
                               learning_rate = 0.01, # tune this -- start with 0.01
-                              batch_size = 64) # can do 64 with this data -- increase size to speed up run
+                              batch_size = 64) # can do 64 with this data -- increase size to speed up run (if data is larger)
   )
   
   res
