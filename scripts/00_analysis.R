@@ -9,7 +9,7 @@ library(fastDummies)
 library(ife)
 library(riesznet)
 #devtools::install_github("nt-williams/crumble@riesznet")
-library(crumble) # already downloaded, use riesznet version 
+library(crumble) # use riesznet version 
 library(ranger)
 library(xgboost)
 library(mlr3extralearners)
@@ -103,10 +103,10 @@ run_crumble <- function(data,
     effect = "RT",
     learners = c("mean", "glm", "ranger", "earth", "xgboost"), # algorithms from different families, can adjust
     #nn_module = sequential_module(),
-    control = crumble_control(crossfit_folds = 2L, # may want to increase
+    control = crumble_control(crossfit_folds = 5L, # may want to increase
                               epochs = 500L, # start at 500L, can decrease if data is large
                               mlr3superlearner_folds = 5L, # can adjust depending on sample size
-                              zprime_folds = 1L, # keeping at default, can adjust (increase may speed up run)
+                              zprime_folds = 5L, # keeping low, can adjust (increase may speed up run)
                               learning_rate = 0.01, # tune this -- start with 0.01
                               batch_size = 64) # can do 64 with this data -- increase size to speed up run (if data is larger)
   )
