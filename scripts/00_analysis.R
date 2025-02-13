@@ -7,15 +7,17 @@
 library(tidyverse)
 library(fastDummies)
 library(ife)
+#devtools::install_github("nt-williams/riesznet")
 library(riesznet)
 #devtools::install_github("nt-williams/crumble@riesznet")
 library(crumble) # use riesznet version 
 library(ranger)
 library(xgboost)
 library(mlr3extralearners)
+library(torch) # might need this?
 
 # reading data
-dat <- read.csv("~/colorado_arsenic/data/simulation_data.csv")
+dat <- read.csv("data/simulation_data.csv")
 
 # summary(dat)
 
@@ -120,24 +122,52 @@ y2 <- "cvd"
 
 # running on Diab_bin outcome
 
-set.seed(1)
-results_diab_bin <- run_crumble(data = dat_with_dummies,
-                                trt = A,
-                                outcome = y1,
-                                covar = W,
-                                mediators = M,
-                                moc = Z)
+finished <- FALSE # marker for the code not being finished
 
-saveRDS(results_diab_bin, "~/results_diab_bin.rds") # saving results
+set.seed(1)
+while(!finished){ # this will continue running the code until a successful iteration -- should print out error message
+  set.seed(1)
+  tryCatch({
+    results_diab_bin <- run_crumble(data = dat_with_dummies,
+                                    trt = A,
+                                    outcome = y1,
+                                    covar = W,
+                                    mediators = M,
+                                    moc = Z)
+    
+    finished <- TRUE # if the run is successul, the marker will be finished = TRUE which will stop the loop
+  }, error = function(e){
+    cat("Error....",
+        e$message)})
+}
+
+saveRDS(results_diab_bin, "results_diab_bin.rds") # saving results
 
 # running on CVD outcome
 
-set.seed(1)
-results_CVD <- run_crumble(data = dat_with_dummies,
-                           trt = A,
-                           outcome = y2,
-                           covar = W,
-                           mediators = M,
-                           moc = Z)
+finished <- FALSE
 
-saveRDS(results_CVD, "~/results_CVD.rds") # saving results
+set.seed(1)
+while(!finished){  # this will continue running the code until a successful iteration -- should print out error message
+  set.seed(1)
+  tryCatch({
+    results_CVD <- run_crumble(data = dat_with_dummies,
+                                    trt = A,
+                                    outcome = y2,
+                                    covar = W,
+                                    mediators = M,
+                                    moc = Z)
+    
+    finished <- TRUE
+  }, error = function(e){
+    cat("Error....",
+        e$message)})
+}
+
+
+
+saveRDS(results_CVD, "results_CVD.rds") # saving results
+
+
+
+
