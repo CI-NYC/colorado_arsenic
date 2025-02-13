@@ -118,7 +118,7 @@ run_crumble <- function(data,
 
 # outcomes
 y1 <- "diab_bin"
-y2 <- "cvd"
+y2 <- "CVD"
 
 # running on Diab_bin outcome
 
